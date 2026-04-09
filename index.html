@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📖 NovelSnap - 소설을 예쁘게!</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&family=Jua&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- html2canvas CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+  <!-- ── 헤더 ─────────────────────────────────────────────────── -->
+  <header class="app-header">
+    <span class="logo-emoji">📖</span>
+    <h1 class="app-title">NovelSnap</h1>
+    <span class="app-subtitle">소설을 예쁘게 정리해드려요 🎀</span>
+  </header>
+
+  <!-- ── 메인 ─────────────────────────────────────────────────── -->
+  <main class="app-main">
+
+    <!-- ── 설정 패널 (왼쪽) ────────────────────────────────────── -->
+    <aside class="settings-panel" id="settings-panel">
+
+      <!-- 1. 색상 설정 -->
+      <div class="section-card">
+        <div class="panel-title">🎨 배경 &amp; 글씨 색상</div>
+
+        <div class="color-row">
+          <div class="color-field">
+            <label for="bg-color">배경색</label>
+            <div class="color-input-wrapper" onclick="document.getElementById('bg-color').click()">
+              <input type="color" id="bg-color" value="#fff8f0">
+              <span class="color-value" id="bg-color-value">#fff8f0</span>
+            </div>
+          </div>
+          <div class="color-field">
+            <label for="text-color">글씨색</label>
+            <div class="color-input-wrapper" onclick="document.getElementById('text-color').click()">
+              <input type="color" id="text-color" value="#5c4a3a">
+              <span class="color-value" id="text-color-value">#5c4a3a</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 테마 프리셋 -->
+        <div class="panel-title" style="margin-top:14px;">✨ 프리셋 테마</div>
+        <div class="theme-presets" id="theme-presets"></div>
+      </div>
+
+      <!-- 2. 캐릭터 등록 -->
+      <div class="section-card">
+        <div class="panel-title">👤 캐릭터 등록</div>
+
+        <form class="char-form" id="char-form">
+          <div class="input-group">
+            <label for="char-name">캐릭터 이름 *</label>
+            <input
+              type="text"
+              id="char-name"
+              class="cute-input"
+              placeholder="예: 민수, 영희..."
+              required
+            >
+          </div>
+
+          <div class="input-group">
+            <label>말풍선 위치</label>
+            <select id="char-side" class="cute-select">
+              <option value="left">⬅️ 왼쪽</option>
+              <option value="right">➡️ 오른쪽</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label>프로필 이미지 (선택)</label>
+            <label class="file-input-label">
+              📷 이미지 선택하기
+              <input type="file" id="char-image" accept="image/*">
+            </label>
+            <img id="char-image-preview" src="" alt="미리보기">
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-sm">
+            ➕ 캐릭터 추가
+          </button>
+        </form>
+
+        <!-- 등록된 캐릭터 목록 -->
+        <div class="panel-title" style="margin-top:16px;">📋 등록된 캐릭터</div>
+        <div class="char-list" id="char-list">
+          <p class="empty-msg">아직 등록된 캐릭터가 없어요 💭</p>
+        </div>
+      </div>
+
+      <!-- 3. 소설 입력 -->
+      <div class="section-card">
+        <div class="panel-title">📝 소설 텍스트 입력</div>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px; line-height:1.6;">
+          💡 <strong>" "</strong> 안의 텍스트는 대사 말풍선으로,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<strong>' '</strong> 안의 텍스트는 속마음으로 표시돼요!
+        </p>
+        <textarea
+          id="novel-input"
+          class="novel-textarea"
+          placeholder='"안녕, 나야!" 민수가 손을 흔들었다.
+영희는 잠시 멈추더니 천천히 고개를 들었다.
+'"'"'이 사람은 왜 항상 이렇게 밝은 걸까.'"'"'
+"오랜만이야, 잘 지냈어?" 영희가 조용히 대답했다.'
+        ></textarea>
+
+        <button id="btn-convert" class="btn btn-primary btn-full" style="margin-top:12px;">
+          ✨ 변환하기
+        </button>
+      </div>
+
+      <!-- 4. 내보내기 -->
+      <div class="section-card">
+        <div class="panel-title">💾 내보내기</div>
+        <div class="export-group">
+          <button id="btn-export-html" class="btn btn-success btn-sm">
+            📄 HTML 저장
+          </button>
+          <button id="btn-export-png" class="btn btn-info btn-sm">
+            🖼️ PNG 저장
+          </button>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ── 미리보기 패널 (오른쪽) ──────────────────────────────── -->
+    <section class="panel preview-panel" id="preview-panel">
+      <div class="preview-header">
+        <span>✨</span>
+        <span class="preview-header-title">미리보기</span>
+        <span class="preview-badge">실시간</span>
+      </div>
+
+      <div class="preview-scroll">
+        <div id="preview-content">
+          <div class="preview-placeholder">
+            <div class="placeholder-emoji">📖</div>
+            <p>왼쪽에 소설 텍스트를 입력하고<br>✨ 변환하기 버튼을 눌러주세요!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Scripts ────────────────────────────────────────────────── -->
+  <script src="js/parser.js"></script>
+  <script src="js/exporter.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- 컬러 피커 값 표시 업데이트 -->
+  <script>
+    document.getElementById('bg-color').addEventListener('input', function() {
+      document.getElementById('bg-color-value').textContent = this.value;
+    });
+    document.getElementById('text-color').addEventListener('input', function() {
+      document.getElementById('text-color-value').textContent = this.value;
+    });
+  </script>
+
+</body>
+</html>
