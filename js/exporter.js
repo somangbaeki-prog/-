@@ -19,7 +19,6 @@ async function exportToPNG() {
   try {
     const canvas = await html2canvas(preview, {
       useCORS: true,
-      allowTaint: true,
       backgroundColor: null,
       scale: 2,
       logging: false,

@@ -93,6 +93,7 @@ function initCharacterForm() {
     reader.onload = (ev) => {
       preview.src = ev.target.result;
       preview.style.display = 'block';
+      preview.dataset.selected = 'true';
     };
     reader.readAsDataURL(file);
   });
@@ -118,7 +119,7 @@ function addCharacter() {
   const character = {
     id: nextCharId++,
     name,
-    imageData: preview.src && preview.style.display !== 'none' ? preview.src : null,
+    imageData: preview.dataset.selected === 'true' && preview.src ? preview.src : null,
     side: sideSelect.value,
   };
 
@@ -131,6 +132,7 @@ function addCharacter() {
   imageInput.value = '';
   preview.src = '';
   preview.style.display = 'none';
+  delete preview.dataset.selected;
 }
 
 function removeCharacter(id) {
@@ -251,7 +253,7 @@ function buildChatRow(seg, idx) {
   } else {
     const placeholder = document.createElement('div');
     placeholder.className = 'avatar-placeholder';
-    placeholder.textContent = char ? char.name[0] : '?';
+    placeholder.textContent = char && char.name ? char.name[0] : '?';
     avatarDiv.appendChild(placeholder);
   }
 
