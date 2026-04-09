@@ -221,7 +221,7 @@ function renderPreview() {
     }
 
     if (seg.type === 'dialogue') {
-      container.appendChild(buildChatRow(seg, idx, false));
+      container.appendChild(buildChatRow(seg, idx));
       return;
     }
 
@@ -232,7 +232,7 @@ function renderPreview() {
   });
 }
 
-function buildChatRow(seg, idx, isThought) {
+function buildChatRow(seg, idx) {
   const char = state.characters.find((c) => c.id === seg.characterId);
   const isRight = char ? char.side === 'right' : false;
 

@@ -18,13 +18,7 @@ function parseNovelText(text) {
     // 작은따옴표 속마음 찾기 ' '
     const thoughtMatch = remaining.match(/^([\s\S]*?)[''']([^''']+)[''']/);
 
-    let dIdx = dialogueMatch ? dialogueMatch[0].length : Infinity;
-    let tIdx = thoughtMatch ? thoughtMatch[0].length : Infinity;
-
     // 앞에 오는 것 우선 처리
-    const dStart = dialogueMatch ? remaining.indexOf(dialogueMatch[0]) : Infinity;
-    const tStart = thoughtMatch ? remaining.indexOf(thoughtMatch[0]) : Infinity;
-
     const dBefore = dialogueMatch ? dialogueMatch[1].length : Infinity;
     const tBefore = thoughtMatch ? thoughtMatch[1].length : Infinity;
 
