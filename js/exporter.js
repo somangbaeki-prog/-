@@ -2,6 +2,9 @@
  * exporter.js - HTML/이미지 내보내기 로직
  */
 
+// HTML 소스 코드 저장 (모달에서 사용)
+let _lastHtmlContent = '';
+
 /**
  * 미리보기 영역을 PNG 이미지로 다운로드합니다.
  * html2canvas 라이브러리를 사용합니다.
@@ -17,9 +20,13 @@ async function exportToPNG() {
   }
 
   try {
+    if (typeof html2canvas === 'undefined') {
+      throw new Error('html2canvas 라이브러리가 로드되지 않았습니다.');
+    }
     const canvas = await html2canvas(preview, {
       useCORS: true,
-      backgroundColor: null,
+      allowTaint: true,
+      backgroundColor: preview.style.backgroundColor || '#fff8f0',
       scale: 2,
       logging: false,
     });
@@ -30,7 +37,7 @@ async function exportToPNG() {
     link.click();
   } catch (err) {
     console.error('PNG 내보내기 실패:', err);
-    alert('이미지 내보내기에 실패했습니다. 😢');
+    alert('이미지 내보내기에 실패했습니다. 😢\n' + err.message);
   } finally {
     if (btn) {
       btn.textContent = '🖼️ PNG 저장';
@@ -40,7 +47,7 @@ async function exportToPNG() {
 }
 
 /**
- * 미리보기 영역을 HTML 파일로 다운로드합니다.
+ * 미리보기 영역의 HTML 소스 코드를 모달로 보여줍니다.
  */
 function exportToHTML() {
   const preview = document.getElementById('preview-content');
@@ -48,20 +55,24 @@ function exportToHTML() {
 
   const bgColor = preview.style.backgroundColor || '#fff8f0';
   const textColor = preview.style.color || '#5c4a3a';
+  const fontFamily = preview.style.fontFamily || "'Gamja Flower', cursive";
 
-  // 인라인 스타일을 포함한 독립 HTML 생성
+  // 드롭다운(캐릭터 선택) 요소를 제거한 미리보기 HTML 생성
+  const cloned = preview.cloneNode(true);
+  cloned.querySelectorAll('.char-dropdown-wrapper').forEach(el => el.remove());
+
   const htmlContent = `<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NovelSnap 내보내기</title>
+  <title>캘런 오코너는 바보다 - 내보내기</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Gamja+Flower&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Cute+Font&family=Do+Hyeon&family=Gaegu&family=Gamja+Flower&family=Gothic+A1&family=Hi+Melody&family=Jua&family=Nanum+Gothic&family=Nanum+Myeongjo&family=Nanum+Pen+Script&family=Noto+Sans+KR&family=Single+Day&family=Song+Myung&family=Sunflower:wght@300;500;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Gamja Flower', 'Jua', cursive;
+      font-family: ${fontFamily};
       background: ${bgColor};
       color: ${textColor};
       padding: 24px;
@@ -69,7 +80,6 @@ function exportToHTML() {
     }
     .preview-content { max-width: 680px; margin: 0 auto; }
     .narration {
-      font-family: 'Gamja Flower', cursive;
       font-size: 16px;
       line-height: 1.9;
       color: ${textColor};
@@ -92,7 +102,7 @@ function exportToHTML() {
     }
     .avatar-placeholder {
       width: 44px; height: 44px; border-radius: 50%;
-      background: linear-gradient(135deg, #ffb3c6, #ffd6e0);
+      background: #ffd6e0;
       display: flex; align-items: center; justify-content: center;
       font-size: 20px; flex-shrink: 0;
       box-shadow: 0 2px 8px rgba(0,0,0,0.12);
@@ -114,36 +124,67 @@ function exportToHTML() {
       box-shadow: 0 2px 8px rgba(0,0,0,0.10);
     }
     .bubble-dialogue {
-      background: #fff;
-      color: #333;
       border-radius: 4px 18px 18px 18px;
     }
     .chat-row.right .bubble-dialogue {
-      background: #ffe066;
       border-radius: 18px 4px 18px 18px;
     }
     .bubble-thought {
-      background: rgba(220, 200, 255, 0.55);
+      background: rgba(200, 180, 240, 0.35);
       color: #5c4a7f;
       font-style: italic;
       border-radius: 18px;
       border: 1.5px dashed #c4a8e8;
     }
-    .thought-row { justify-content: center; }
-    .thought-row .bubble-thought { text-align: center; }
   </style>
 </head>
 <body>
 <div class="preview-content">
-${preview.innerHTML}
+${cloned.innerHTML}
 </div>
 </body>
 </html>`;
 
-  const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+  _lastHtmlContent = htmlContent;
+
+  const modal = document.getElementById('html-modal');
+  const area = document.getElementById('html-source-area');
+  if (modal && area) {
+    area.value = htmlContent;
+    modal.style.display = 'flex';
+  }
+}
+
+function closeHtmlModal() {
+  const modal = document.getElementById('html-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+function copyHtmlSource() {
+  const area = document.getElementById('html-source-area');
+  if (!area) return;
+
+  function fallback() {
+    area.select();
+    document.execCommand('copy');
+    alert('소스 코드가 클립보드에 복사되었습니다! 📋');
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(area.value)
+      .then(() => alert('소스 코드가 클립보드에 복사되었습니다! 📋'))
+      .catch(() => fallback());
+  } else {
+    fallback();
+  }
+}
+
+function downloadHtmlSource() {
+  const blob = new Blob([_lastHtmlContent], { type: 'text/html;charset=utf-8' });
   const link = document.createElement('a');
   link.download = 'novelsnap.html';
   link.href = URL.createObjectURL(blob);
   link.click();
   URL.revokeObjectURL(link.href);
 }
+

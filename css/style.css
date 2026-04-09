@@ -34,14 +34,14 @@ html {
 
 body {
   font-family: var(--font-cute);
-  background: linear-gradient(135deg, #fff0f5 0%, #f8f0ff 50%, #f0f8ff 100%);
+  background: #FFE4E1;
   color: var(--text);
   min-height: 100vh;
 }
 
 /* ── 헤더 ──────────────────────────────────────────────────────── */
 .app-header {
-  background: linear-gradient(135deg, #ffb3c6 0%, #c9b8f0 50%, #9bd3f0 100%);
+  background: #FFB3C6;
   padding: 16px 32px;
   display: flex;
   align-items: center;
@@ -342,7 +342,7 @@ body {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  background: #ff85a1;
   color: #fff;
   box-shadow: 0 4px 16px rgba(180, 100, 150, 0.35);
 }
@@ -358,13 +358,13 @@ body {
 }
 
 .btn-success {
-  background: linear-gradient(135deg, #5ecf8c 0%, #3ab87a 100%);
+  background: #5ecf8c;
   color: #fff;
   box-shadow: 0 4px 14px rgba(60, 180, 100, 0.3);
 }
 
 .btn-info {
-  background: linear-gradient(135deg, #72c8f5 0%, #4aa8e0 100%);
+  background: #72c8f5;
   color: #fff;
   box-shadow: 0 4px 14px rgba(70, 160, 220, 0.3);
 }
@@ -425,7 +425,7 @@ body {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary-light), var(--accent-light));
+  background: var(--primary-light);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -515,7 +515,7 @@ body {
 }
 
 .preview-header {
-  background: linear-gradient(135deg, #ffd6e7 0%, #e8d5ff 100%);
+  background: #ffd6e7;
   padding: 14px 20px;
   display: flex;
   align-items: center;
@@ -619,7 +619,7 @@ body {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary-light), var(--accent-light));
+  background: var(--primary-light);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -674,13 +674,9 @@ body {
   border: 1.5px solid #f0d840;
 }
 
-/* 속마음 */
+/* 속마음 - 좌/우 배치 지원 */
 .thought-row {
-  justify-content: center;
-}
-
-.thought-info {
-  align-items: center !important;
+  /* 말풍선과 동일하게 좌/우 배치됨 */
 }
 
 .bubble-thought {
@@ -768,4 +764,80 @@ body {
 
 .chat-row, .narration, .paragraph-break {
   animation: fadeIn 0.3s ease;
+}
+
+/* ── HTML 소스 모달 ─────────────────────────────────────────────*/
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-box {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+  padding: 24px;
+  width: 90%;
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 85vh;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-cute);
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--primary-dark);
+}
+
+.modal-close-btn {
+  background: #ffecec;
+  border: none;
+  color: #e05555;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.modal-close-btn:hover {
+  background: #ffd0d0;
+  transform: scale(1.1);
+}
+
+.html-source-textarea {
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: #333;
+  background: #f8f8f8;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  resize: vertical;
+  min-height: 320px;
+  flex: 1;
+  width: 100%;
+  outline: none;
+  line-height: 1.6;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
