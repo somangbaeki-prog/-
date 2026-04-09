@@ -8,6 +8,9 @@ const state = {
   segments: [],         // 파싱된 세그먼트 배열
   bgColor: '#fff8f0',
   textColor: '#5c4a3a',
+  bubbleColorLeft: '#ffffff',
+  bubbleColorRight: '#ffe066',
+  fontFamily: "'Gamja Flower', cursive",
 };
 
 let nextCharId = 1;
@@ -15,7 +18,9 @@ let nextCharId = 1;
 // ── 초기화 ────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initColorPickers();
+  initBubbleColorPickers();
   initThemePresets();
+  initFontSelector();
   initCharacterForm();
   initConvertButton();
   initExportButtons();
@@ -46,17 +51,39 @@ function updatePreviewColors() {
   if (preview) {
     preview.style.backgroundColor = state.bgColor;
     preview.style.color = state.textColor;
+    preview.style.fontFamily = state.fontFamily;
   }
+}
+
+// ── 말풍선 컬러 피커 ──────────────────────────────────────────────────
+function initBubbleColorPickers() {
+  const leftPicker = document.getElementById('bubble-left-color');
+  const rightPicker = document.getElementById('bubble-right-color');
+  if (!leftPicker || !rightPicker) return;
+
+  leftPicker.value = state.bubbleColorLeft;
+  rightPicker.value = state.bubbleColorRight;
+
+  leftPicker.addEventListener('input', (e) => {
+    state.bubbleColorLeft = e.target.value;
+    renderPreview();
+  });
+  rightPicker.addEventListener('input', (e) => {
+    state.bubbleColorRight = e.target.value;
+    renderPreview();
+  });
 }
 
 // ── 테마 프리셋 ────────────────────────────────────────────────────────
 const THEMES = [
-  { name: '🌸 핑크', bg: '#fff0f5', text: '#7c3a5a' },
-  { name: '💜 라벤더', bg: '#f3f0ff', text: '#4a3a7c' },
-  { name: '🌿 민트', bg: '#f0fff8', text: '#2d6a52' },
-  { name: '🍋 레몬', bg: '#fffde7', text: '#5c4a00' },
-  { name: '🩵 스카이', bg: '#f0f8ff', text: '#1a4a7c' },
-  { name: '🤍 화이트', bg: '#ffffff', text: '#333333' },
+  { name: '🌸 파스텔 핑크',      bg: '#fff0f5', text: '#7c3a5a', bLeft: '#ffffff', bRight: '#ffcce0' },
+  { name: '💜 파스텔 라벤더',    bg: '#f3f0ff', text: '#4a3a7c', bLeft: '#ffffff', bRight: '#e0d5ff' },
+  { name: '🌿 파스텔 민트',      bg: '#f0fff8', text: '#2d6a52', bLeft: '#ffffff', bRight: '#b5f0d8' },
+  { name: '🍑 파스텔 피치',      bg: '#fff5f0', text: '#7c4a3a', bLeft: '#ffffff', bRight: '#ffd5c0' },
+  { name: '🩵 파스텔 스카이블루', bg: '#f0f8ff', text: '#1a4a7c', bLeft: '#ffffff', bRight: '#c0deff' },
+  { name: '🍋 파스텔 레몬',      bg: '#fffde7', text: '#5c4a00', bLeft: '#ffffff', bRight: '#fff3a0' },
+  { name: '🌹 파스텔 로즈',      bg: '#fff0f3', text: '#8c2a4a', bLeft: '#ffffff', bRight: '#ffc0cc' },
+  { name: '🪻 파스텔 라일락',    bg: '#f8f0ff', text: '#5a3a8c', bLeft: '#ffffff', bRight: '#d8c0f5' },
 ];
 
 function initThemePresets() {
@@ -71,12 +98,59 @@ function initThemePresets() {
     btn.addEventListener('click', () => {
       state.bgColor = theme.bg;
       state.textColor = theme.text;
+      state.bubbleColorLeft = theme.bLeft;
+      state.bubbleColorRight = theme.bRight;
       document.getElementById('bg-color').value = theme.bg;
       document.getElementById('text-color').value = theme.text;
+      document.getElementById('bubble-left-color').value = theme.bLeft;
+      document.getElementById('bubble-right-color').value = theme.bRight;
+      document.getElementById('bg-color-value').textContent = theme.bg;
+      document.getElementById('text-color-value').textContent = theme.text;
+      document.getElementById('bubble-left-color-value').textContent = theme.bLeft;
+      document.getElementById('bubble-right-color-value').textContent = theme.bRight;
       updatePreviewColors();
       renderPreview();
     });
     container.appendChild(btn);
+  });
+}
+
+// ── 폰트 선택 ──────────────────────────────────────────────────────────
+const FONTS = [
+  { name: 'Gamja Flower (감자꽃) ★기본', family: "'Gamja Flower', cursive" },
+  { name: 'Jua (주아)',                  family: "'Jua', sans-serif" },
+  { name: 'Noto Sans KR',               family: "'Noto Sans KR', sans-serif" },
+  { name: 'Nanum Gothic (나눔고딕)',     family: "'Nanum Gothic', sans-serif" },
+  { name: 'Nanum Myeongjo (나눔명조)',   family: "'Nanum Myeongjo', serif" },
+  { name: 'Nanum Pen Script (나눔펜)',   family: "'Nanum Pen Script', cursive" },
+  { name: 'Do Hyeon (도현)',             family: "'Do Hyeon', sans-serif" },
+  { name: 'Gothic A1 (고딕A1)',          family: "'Gothic A1', sans-serif" },
+  { name: 'Black Han Sans (검은고딕)',   family: "'Black Han Sans', sans-serif" },
+  { name: 'Sunflower (해바라기)',        family: "'Sunflower', sans-serif" },
+  { name: 'Cute Font (귀여운폰트)',      family: "'Cute Font', cursive" },
+  { name: 'Gaegu (개구)',                family: "'Gaegu', cursive" },
+  { name: 'Hi Melody (하이멜로디)',      family: "'Hi Melody', cursive" },
+  { name: 'Song Myung (송명)',           family: "'Song Myung', serif" },
+  { name: 'Single Day (싱글데이)',       family: "'Single Day', cursive" },
+];
+
+function initFontSelector() {
+  const select = document.getElementById('font-select');
+  if (!select) return;
+
+  FONTS.forEach((font) => {
+    const opt = document.createElement('option');
+    opt.value = font.family;
+    opt.textContent = font.name;
+    opt.style.fontFamily = font.family;
+    if (font.family === state.fontFamily) opt.selected = true;
+    select.appendChild(opt);
+  });
+
+  select.addEventListener('change', (e) => {
+    state.fontFamily = e.target.value;
+    updatePreviewColors();
+    renderPreview();
   });
 }
 
@@ -196,6 +270,7 @@ function renderPreview() {
   container.innerHTML = '';
   container.style.backgroundColor = state.bgColor;
   container.style.color = state.textColor;
+  container.style.fontFamily = state.fontFamily;
 
   if (state.segments.length === 0) {
     container.innerHTML = `<div class="preview-placeholder">
@@ -270,6 +345,7 @@ function buildChatRow(seg, idx) {
 
   const bubble = document.createElement('div');
   bubble.className = 'bubble bubble-dialogue';
+  bubble.style.backgroundColor = isRight ? state.bubbleColorRight : state.bubbleColorLeft;
   bubble.textContent = seg.text;
   infoDiv.appendChild(bubble);
 
@@ -284,12 +360,38 @@ function buildChatRow(seg, idx) {
 }
 
 function buildThoughtRow(seg, idx) {
+  const char = state.characters.find((c) => c.id === seg.characterId);
+  const isRight = char ? char.side === 'right' : false;
+
   const row = document.createElement('div');
-  row.className = 'chat-row thought-row';
+  row.className = `chat-row thought-row${isRight ? ' right' : ''}`;
   row.dataset.segIdx = idx;
 
+  // 아바타
+  const avatarDiv = document.createElement('div');
+  if (char && char.imageData) {
+    const img = document.createElement('img');
+    img.src = char.imageData;
+    img.className = 'avatar';
+    img.alt = char.name;
+    avatarDiv.appendChild(img);
+  } else {
+    const placeholder = document.createElement('div');
+    placeholder.className = 'avatar-placeholder';
+    placeholder.textContent = char && char.name ? char.name[0] : '💭';
+    avatarDiv.appendChild(placeholder);
+  }
+
+  // 말풍선 그룹
   const infoDiv = document.createElement('div');
-  infoDiv.className = 'chat-info thought-info';
+  infoDiv.className = 'chat-info';
+
+  if (char) {
+    const nameEl = document.createElement('div');
+    nameEl.className = 'char-name';
+    nameEl.textContent = char.name;
+    infoDiv.appendChild(nameEl);
+  }
 
   const bubble = document.createElement('div');
   bubble.className = 'bubble bubble-thought';
@@ -299,6 +401,7 @@ function buildThoughtRow(seg, idx) {
   const dropdown = buildCharDropdown(seg, idx);
   infoDiv.appendChild(dropdown);
 
+  row.appendChild(avatarDiv);
   row.appendChild(infoDiv);
   return row;
 }

@@ -3,28 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>📖 NovelSnap - 소설을 예쁘게!</title>
+  <title>캘런 오코너는 바보다</title>
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts - 15가지 한국어 폰트 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&family=Jua&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Cute+Font&family=Do+Hyeon&family=Gaegu&family=Gamja+Flower&family=Gothic+A1&family=Hi+Melody&family=Jua&family=Nanum+Gothic&family=Nanum+Myeongjo&family=Nanum+Pen+Script&family=Noto+Sans+KR&family=Single+Day&family=Song+Myung&family=Sunflower:wght@300;500;700&display=swap" rel="stylesheet">
 
   <!-- Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
 
   <!-- html2canvas CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
-          integrity="sha384-OLBgp1GsljhM2TJ+sbHjaiH9txEUvgdDTAzHv2P24donTt6/529l+9Ua0vFImLlb"
-          crossorigin="anonymous"></script>
+          integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"></script>
 </head>
 <body>
 
   <!-- ── 헤더 ─────────────────────────────────────────────────── -->
   <header class="app-header">
-    <span class="logo-emoji">📖</span>
-    <h1 class="app-title">NovelSnap</h1>
-    <span class="app-subtitle">소설을 예쁘게 정리해드려요 🎀</span>
+    <span class="logo-emoji">🐶</span>
+    <h1 class="app-title">캘런 오코너는 바보다</h1>
   </header>
 
   <!-- ── 메인 ─────────────────────────────────────────────────── -->
@@ -54,9 +54,37 @@
           </div>
         </div>
 
+        <!-- 말풍선 색상 -->
+        <div class="panel-title" style="margin-top:14px;">💬 말풍선 색상</div>
+        <div class="color-row">
+          <div class="color-field">
+            <label for="bubble-left-color">왼쪽 말풍선</label>
+            <div class="color-input-wrapper" onclick="document.getElementById('bubble-left-color').click()">
+              <input type="color" id="bubble-left-color" value="#ffffff">
+              <span class="color-value" id="bubble-left-color-value">#ffffff</span>
+            </div>
+          </div>
+          <div class="color-field">
+            <label for="bubble-right-color">오른쪽 말풍선</label>
+            <div class="color-input-wrapper" onclick="document.getElementById('bubble-right-color').click()">
+              <input type="color" id="bubble-right-color" value="#ffe066">
+              <span class="color-value" id="bubble-right-color-value">#ffe066</span>
+            </div>
+          </div>
+        </div>
+
         <!-- 테마 프리셋 -->
         <div class="panel-title" style="margin-top:14px;">✨ 프리셋 테마</div>
         <div class="theme-presets" id="theme-presets"></div>
+      </div>
+
+      <!-- 1-2. 폰트 선택 -->
+      <div class="section-card">
+        <div class="panel-title">🔤 폰트 선택</div>
+        <div class="input-group">
+          <label for="font-select">미리보기 폰트</label>
+          <select id="font-select" class="cute-select"></select>
+        </div>
       </div>
 
       <!-- 2. 캐릭터 등록 -->
@@ -70,7 +98,7 @@
               type="text"
               id="char-name"
               class="cute-input"
-              placeholder="예: 민수, 영희..."
+              placeholder="예: 캘런, 소피아, 데이지, 리지, 다미..."
               required
             >
           </div>
@@ -104,9 +132,9 @@
         </div>
       </div>
 
-      <!-- 3. 소설 입력 -->
+      <!-- 3. 텍스트 입력 -->
       <div class="section-card">
-        <div class="panel-title">📝 소설 텍스트 입력</div>
+        <div class="panel-title">📝 텍스트 입력</div>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px; line-height:1.6;">
           💡 <strong>" "</strong> 안의 텍스트는 대사 말풍선으로,<br>
           &nbsp;&nbsp;&nbsp;&nbsp;<strong>' '</strong> 안의 텍스트는 속마음으로 표시돼요!
@@ -114,10 +142,7 @@
         <textarea
           id="novel-input"
           class="novel-textarea"
-          placeholder="&#34;안녕, 나야!&#34; 민수가 손을 흔들었다.
-영희는 잠시 멈추더니 천천히 고개를 들었다.
-&#39;이 사람은 왜 항상 이렇게 밝은 걸까.&#39;
-&#34;오랜만이야, 잘 지냈어?&#34; 영희가 조용히 대답했다."
+          placeholder="캘런 오코너는 바보 멍청이 똥개이다"
         ></textarea>
 
         <button id="btn-convert" class="btn btn-primary btn-full" style="margin-top:12px;">
@@ -160,6 +185,21 @@
 
   </main>
 
+  <!-- HTML 소스 코드 모달 -->
+  <div id="html-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span>📄 HTML 소스 코드</span>
+        <button class="modal-close-btn" onclick="closeHtmlModal()">✕</button>
+      </div>
+      <textarea id="html-source-area" class="html-source-textarea" readonly></textarea>
+      <div class="modal-actions">
+        <button class="btn btn-secondary btn-sm" onclick="copyHtmlSource()">📋 복사하기</button>
+        <button class="btn btn-success btn-sm" onclick="downloadHtmlSource()">💾 다운로드</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ── Scripts ────────────────────────────────────────────────── -->
   <script src="js/parser.js"></script>
   <script src="js/exporter.js"></script>
@@ -172,6 +212,12 @@
     });
     document.getElementById('text-color').addEventListener('input', function() {
       document.getElementById('text-color-value').textContent = this.value;
+    });
+    document.getElementById('bubble-left-color').addEventListener('input', function() {
+      document.getElementById('bubble-left-color-value').textContent = this.value;
+    });
+    document.getElementById('bubble-right-color').addEventListener('input', function() {
+      document.getElementById('bubble-right-color-value').textContent = this.value;
     });
   </script>
 
